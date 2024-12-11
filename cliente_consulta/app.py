@@ -1,9 +1,14 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import os
 import json
 
 app = Flask("Minha API")
 CORS(app)
+
+def obter_caminho_arquivo():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_dir, "data", "clientes.json")
 
 @app.route("/")
 def homepage():
@@ -31,7 +36,7 @@ def cadastrar():
     return jsonify({"mensagem": "Dados cadastrados com sucesso!"}), 201
     
 def carregar_arquivo():
-    caminho_arquivo = "data/clientes.json"
+    caminho_arquivo = obter_caminho_arquivo()
     try: 
         with open(caminho_arquivo, "r") as arq:
             return json.load(arq)
@@ -39,7 +44,7 @@ def carregar_arquivo():
         return {}
 
 def gravar_arquivo(dados):
-    caminho_arquivo = "data/clientes.json"
+    caminho_arquivo = obter_caminho_arquivo()
     try: 
         with open(caminho_arquivo, "w") as arq:
             json.dump(dados, arq, indent=4)
@@ -61,4 +66,3 @@ def dados(cpf):
 
 if __name__=="__main__":
     app.run(debug=True)
- 
